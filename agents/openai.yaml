@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex 交互式学习页面"
+  short_description: "Turn study notes into annotated Codex Q&A pages"
+  default_prompt: "Use $codex-study-surface to turn my current study notes into an interactive HTML page with anchored Codex explanations."
