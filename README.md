@@ -13,6 +13,7 @@ Codex Study Surface 面向代码库理解、功能研究和技术主题学习。
 - 第一次提问创建 Codex thread，后续提问自动续接同一 thread。
 - 多个问题按 FIFO 队列串行处理，避免并发污染上下文。
 - 回答支持安全 Markdown 渲染，包括列表、粗体、代码和引用。
+- 当顺序、状态、并发、数据流或空间变化难以静态表达时，可生成经过验证的独立网页动画。
 - 问答卡片保存在浏览器本地，刷新后仍可查看。
 - 服务仅监听 `127.0.0.1`，Codex 运行在只读沙箱中。
 - 只依赖 Node.js 内置模块，不需要安装 npm 依赖。
@@ -194,6 +195,14 @@ thread 的生命周期与运行中的页面服务一致：
 
 Codex 回答使用更严格的安全子集：段落、标题、列表、引用、代码、强调、安全 HTTP/HTTPS 链接和分割线。原始 HTML 会被当作文本处理。
 
+## 可选动画解释
+
+动画不是默认装饰，而是处理时间、运动和状态变化的补充表达。生成学习资料时，AI 会先判断文字、代码、表格或静态图是否已经足够；只有它们会丢失关键过程时，才在学习目录的 `visuals/` 下创建一个自包含动画页，并从 Markdown 链接过去。
+
+推荐实现顺序是 CSS 状态过渡、SVG 路径或节点运动、少量原生 JavaScript 控制，最后才考虑 Canvas。动画必须包含文字等价说明、可控制播放、支持窄屏和 `prefers-reduced-motion`，并在交付前通过浏览器验证。
+
+页面内即时问答仍然只渲染安全 Markdown，不会执行 Codex 回答中的 HTML 或 JavaScript。这样可以保留本地只读交互的安全边界。
+
 ## 项目结构
 
 ```text
@@ -207,7 +216,8 @@ codex-study-surface/
 │   ├── surface.css                  注释与回答卡片样式
 │   └── surface.js                   浏览器选择、提问与渲染逻辑
 ├── references/
-│   └── annotation-protocol.md       锚点、API、CLI 与安全协议
+│   ├── annotation-protocol.md       锚点、API、CLI 与安全协议
+│   └── animated-explanations.md     动画选择、制作与验证规范
 └── scripts/
     ├── build-study-html.mjs         Markdown → HTML 生成器
     ├── study-surface.mjs            本地服务与 Codex CLI 适配器

@@ -1,6 +1,6 @@
 ---
 name: codex-study-surface
-description: Turn existing codebase-study or feature-study Markdown artifacts into a local interactive HTML learning page where the user can select text or elements and receive anchored explanations from the local Codex CLI. Use when the user asks for an HTML understanding document, visual study surface, inline codebase questions, selectable explanations, or a browser-based learning view backed by Codex. Do not use to analyze a repository from scratch; first use codebase-study-workflow or feature-study-workflow to create the authoritative study artifacts.
+description: Turn existing codebase-study or feature-study Markdown artifacts into a local interactive HTML learning page where the user can select text or elements and receive anchored explanations from the local Codex CLI, with optional animated web explainers for temporal, spatial, state-based, or concurrent concepts that prose cannot express clearly. Use when the user asks for an HTML understanding document, visual study surface, animated technical explanation, inline codebase questions, selectable explanations, or a browser-based learning view backed by Codex. Do not use to analyze a repository from scratch; first use an appropriate study workflow to create the authoritative study artifacts.
 ---
 
 # Codex Study Surface
@@ -29,6 +29,26 @@ node <skill-dir>/scripts/build-study-html.mjs \
 For feature-study artifacts, pass `docs/feature-study/<feature-slug>` instead.
 
 The renderer reads Markdown recursively, orders the standard workflow artifacts first, and writes a self-contained HTML document. It adds `data-study-id` and `data-study-source` attributes to headings and content blocks so annotations survive presentation changes.
+
+## Add Animated Explanations Only When Needed
+
+Prefer concise prose, code, a table, or a static diagram when they explain the concept clearly. Create a web animation only when understanding depends on change over time, spatial movement, state transitions, concurrency, queue behavior, data flow, or a multi-step transformation that is materially harder to understand in static form.
+
+When animation is justified:
+
+1. read `references/animated-explanations.md` completely;
+2. storyboard the states and transitions before coding;
+3. create a self-contained file at `<study-directory>/visuals/<descriptive-slug>.html`;
+4. prefer semantic HTML plus inline SVG and CSS; add small vanilla JavaScript only for play, pause, step, reset, or user-controlled state;
+5. add a relative Markdown link such as `[打开编译流程动画](visuals/compilation-pipeline.html)` to the authoritative study artifact;
+6. retain a concise textual explanation so the animation is supplementary rather than the only source of meaning;
+7. open and verify the animation in a browser before delivering the surface.
+
+Use this decision prompt while constructing the study artifacts:
+
+> Can prose, code, a table, or a static diagram explain this without losing the essential sequence, motion, state change, or interaction? If yes, do not animate it. If no, create the smallest self-contained, controllable web animation that reveals that relationship, provide an equivalent text summary, and verify it in the browser.
+
+Generate animations only while constructing the study artifacts. Keep browser Q&A read-only: never execute HTML or JavaScript returned by the local Codex thread, and never treat a page question as authorization to create an animation file.
 
 ## Open The Interactive Page
 
@@ -84,4 +104,4 @@ If a custom state directory was used, pass the same `CODEX_STUDY_SURFACE_STATE_D
 - If a question fails, the inline card shows Codex stderr after secret-like values are redacted.
 - Rebuild the HTML after authoritative Markdown changes, then reload the browser.
 
-Read `references/annotation-protocol.md` only when changing the renderer, browser SDK, server endpoints, or Codex prompt contract.
+Read `references/annotation-protocol.md` only when changing the renderer, browser SDK, server endpoints, or Codex prompt contract. Read `references/animated-explanations.md` only when deciding, creating, or reviewing an animated explainer.
